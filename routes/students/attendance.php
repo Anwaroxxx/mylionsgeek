@@ -11,6 +11,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'role:student', 'school.network'])->group(function () {
+    Route::get('/students/attendance/network-check', function () {
+        return response()->json(['ok' => true]);
+    })->name('student.attendance.network-check');
     Route::get('/students/attendance', [StudentAttendanceController::class, 'index'])
         ->name('student.attendance.index');
     Route::post('/students/attendance/check-in', [StudentAttendanceController::class, 'checkIn'])

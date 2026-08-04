@@ -5,8 +5,27 @@ export const SLOT_LABELS = {
     evening: 'Lunch',
 };
 
+/**
+ * Slot windows in minutes-from-midnight — keep in sync with config/attendance.php.
+ */
+export const SLOT_WINDOWS = {
+    morning: { opens: 9 * 60 + 30, closes: 11 * 60 },
+    lunch: { opens: 11 * 60 + 30, closes: 13 * 60 },
+    evening: { opens: 14 * 60, closes: 17 * 60 },
+};
+
+export const SLOT_ORDER = ['morning', 'lunch', 'evening'];
+
 export function slotLabel(slot) {
     return SLOT_LABELS[slot] ?? slot;
+}
+
+/**
+ * Default value for a slot with no DB data on the selected calendar date.
+ * Always pending — absent is only shown after finalize/check-in/coach actually writes it.
+ */
+export function defaultUnresolvedSlotValue(slot, selectedDateStr, now = new Date()) {
+    return 'pending';
 }
 
 /**
@@ -41,6 +60,7 @@ export function reminderDismissKey(slotStatus) {
 
 /**
  * Home feed banner: show for the entire active slot (present and late).
+ * Relies on already_marked_slots (pending/null are unmarked).
  */
 export function shouldShowHomeReminderBanner(slotStatus) {
     if (!slotStatus) {
