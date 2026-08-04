@@ -59,6 +59,18 @@ export function reminderDismissKey(slotStatus) {
 }
 
 /**
+ * Safe read of already_marked_slots — missing/partial payloads default to [].
+ *
+ * @param {{ already_marked_slots?: string[] } | null | undefined} slotStatus
+ * @returns {string[]}
+ */
+export function alreadyMarkedSlots(slotStatus) {
+    const slots = slotStatus?.already_marked_slots;
+
+    return Array.isArray(slots) ? slots : [];
+}
+
+/**
  * Home feed banner: show for the entire active slot (present and late).
  * Relies on already_marked_slots (pending/null are unmarked).
  */
@@ -67,13 +79,13 @@ export function shouldShowHomeReminderBanner(slotStatus) {
         return false;
     }
 
-    const { current_slot, phase, already_marked_slots } = slotStatus;
+    const { current_slot, phase } = slotStatus;
 
     if (phase !== 'active' || !current_slot) {
         return false;
     }
 
-    return !already_marked_slots.includes(current_slot);
+    return !alreadyMarkedSlots(slotStatus).includes(current_slot);
 }
 
 /**

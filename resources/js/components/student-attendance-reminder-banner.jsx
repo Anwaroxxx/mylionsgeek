@@ -1,5 +1,6 @@
 import AttendanceCheckInPanel from '@/components/AttendanceCheckInPanel';
 import FlashMessage from '@/components/FlashMessage';
+import { flashFromNetworkCheckFailure } from '@/lib/attendance-network-check';
 import {
     homeReminderBannerText,
     reminderDismissKey,
@@ -121,14 +122,14 @@ export default function StudentAttendanceReminderBanner() {
                 return;
             }
 
+            let data = {};
             if (response.status === 403 || response.status === 503) {
-                const data = await response.json().catch(() => ({}));
-                if (data.message) {
-                    setFlashMessage({ message: data.message, type: 'error' });
-                }
+                data = await response.json().catch(() => ({}));
             }
+
+            setFlashMessage(flashFromNetworkCheckFailure(response.status, data));
         } catch {
-            // ignore transient network errors on probe
+            setFlashMessage(flashFromNetworkCheckFailure(0, null));
         } finally {
             setNetworkChecking(false);
         }

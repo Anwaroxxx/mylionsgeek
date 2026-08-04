@@ -228,6 +228,17 @@ test('web network-check returns forbidden for student off-network', function () 
         ]);
 });
 
+test('web network-check returns 503 when whitelist is empty', function () {
+    config(['attendance.allowed_ips' => []]);
+    $student = createWebStudent();
+
+    $this->actingAs($student)
+        ->withServerVariables(['REMOTE_ADDR' => '203.0.113.1'])
+        ->getJson('/students/attendance/network-check')
+        ->assertStatus(503)
+        ->assertJson(['message' => 'Attendance network is not configured.']);
+});
+
 test('web check-in saves present during the present window', function () {
     freezeWebTime('09:42:00');
     $student = createWebStudent();
