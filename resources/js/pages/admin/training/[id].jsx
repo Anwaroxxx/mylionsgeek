@@ -337,7 +337,7 @@ export default function Show({ training, usersNull, courses = [] }) {
 
         const slots = { notes: [] };
         for (const slot of SLOT_ORDER) {
-            slots[slot] = defaultUnresolvedSlotValue(slot, dateStr);
+            slots[slot] = defaultUnresolvedSlotValue();
         }
         return slots;
     };
@@ -358,7 +358,7 @@ export default function Show({ training, usersNull, courses = [] }) {
     const isStudentMarkedSlot = (currentData, slot) => Array.isArray(currentData?.studentMarkedSlots) && currentData.studentMarkedSlots.includes(slot);
 
     const renderSlotSelect = (studentKey, currentData, slot, placeholder) => {
-        const value = currentData[slot] ?? defaultUnresolvedSlotValue(slot, selectedDate);
+        const value = currentData[slot] ?? defaultUnresolvedSlotValue();
         const studentMarked = isStudentMarkedSlot(currentData, slot);
 
         return (

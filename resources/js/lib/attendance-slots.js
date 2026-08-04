@@ -24,7 +24,7 @@ export function slotLabel(slot) {
  * Default value for a slot with no DB data on the selected calendar date.
  * Always pending — absent is only shown after finalize/check-in/coach actually writes it.
  */
-export function defaultUnresolvedSlotValue(slot, selectedDateStr, now = new Date()) {
+export function defaultUnresolvedSlotValue() {
     return 'pending';
 }
 
